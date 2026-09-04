@@ -13,16 +13,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check required directories
+        shell: bash
         run: |
           test -d docs
           test -d .github/workflows
 
       - name: Check required Part 1 files
-  run: |
-    test -f docs/RaceDay_ERD_sketch.pdf
-    test -f docs/RaceDay_API_Endpoint_Plan.docx
-    test -f docs/RaceDay.sql
-    test -f docs/Part1_Project_Structure.md
+        shell: bash
+        run: |
+          test -f docs/RaceDay_ERD_sketch.pdf
+          test -f docs/RaceDay_API_Endpoint_Plan.docx
+          test -f docs/RaceDay.sql
+          test -f docs/Part1_Project_Structure.md
 
       - name: Part 1 validation successful
         run: echo "All required Part 1 files are present."
