@@ -19,7 +19,7 @@ jobs:
 
       - name: Check required Part 1 files
         run: |
-          test -f docs/RaceDay_ERD.pdf
+          test -f docs/RaceDay_ERD_sketch.pdf
           test -f docs/RaceDay_API_Endpoint_Plan.docx
           test -f docs/RaceDay_Database.sql
           test -f docs/Part1_Project_Structure.md
