@@ -36,10 +36,19 @@ The following planning and database documents are included in the `docs` folder:
 
 ## Database Design
 
-The database design is based on the entities required for the RaceDay Event Management System. The ERD defines the relationships between users, organisers, participants, events, categories, enrolments, and results.
+The database design for the RaceDay Event Management System is represented in the ERD and implemented through the SQL Server database script.
 
-The SQL Server script creates the database tables, primary keys, foreign keys, constraints, and sample data.
+The system uses the following main entities:
 
+- **Users** – stores account and role information.
+- **Organisers** – stores organiser-specific information.
+- **Participants** – stores participant-specific information.
+- **Events** – stores event information created by organisers.
+- **Categories** – stores the categories available for each event.
+- **Enrolments** – records participants entering events and selecting categories.
+- **Results** – records the results associated with participant enrolments.
+
+The database script defines the required primary keys, foreign keys, constraints, and sample data.
 ## REST API Planning
 
 The API Endpoint Plan defines the RESTful endpoints that will be implemented in Part 2. The plan identifies the HTTP method, route, purpose, required role, request body, and expected response for each endpoint.
