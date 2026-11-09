@@ -1,0 +1,42 @@
+﻿@model List<EventDto>
+@{
+    ViewData["Title"] = "My Events";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="rd-title mb-0">My Events</h1>
+    <a asp-action="CreateEvent" class="btn btn-primary">New event</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="rd-empty"><p>You have not created any events yet.</p></div>
+}
+else
+{
+    <div class="rd-card">
+        <div class="table-responsive">
+            <table class="table rd-table mb-0 align-middle">
+                <thead><tr><th>Event</th><th>Type</th><th>Date</th><th>Location</th><th>Distance</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@e.Name</td>
+                        <td>@e.EventType</td>
+                        <td>@e.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@e.Location</td>
+                        <td>@e.DistanceKm.ToString("0.##") km</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Categories" asp-route-eventId="@e.EventId" class="btn btn-sm btn-outline-primary">Categories</a>
+                            <a asp-action="Enrolments" asp-route-eventId="@e.EventId" class="btn btn-sm btn-outline-primary">Enrolments</a>
+                            <a asp-action="Results" asp-route-eventId="@e.EventId" class="btn btn-sm btn-outline-primary">Results</a>
+                            <a asp-action="EditEvent" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="DeleteEvent" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

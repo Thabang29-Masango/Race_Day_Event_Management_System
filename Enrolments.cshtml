@@ -1,0 +1,35 @@
+﻿@model EventEnrolmentsViewModel
+@{
+    ViewData["Title"] = "Enrolments";
+}
+<a asp-action="Events" class="rd-back">&larr; My events</a>
+<div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+    <h1 class="rd-title mb-0">Enrolments <small>@Model.Event.Name</small></h1>
+    <a asp-action="Results" asp-route-eventId="@Model.Event.EventId" class="btn btn-primary">Enter results</a>
+</div>
+
+@if (!Model.Enrolments.Any())
+{
+    <div class="rd-empty"><p>No one has enrolled for this event yet.</p></div>
+}
+else
+{
+    <div class="rd-card">
+        <div class="table-responsive">
+            <table class="table rd-table mb-0 align-middle">
+                <thead><tr><th>Participant</th><th>Category</th><th>Enrolled on</th><th>Status</th></tr></thead>
+                <tbody>
+                @foreach (var e in Model.Enrolments)
+                {
+                    <tr>
+                        <td>@e.ParticipantName</td>
+                        <td>@e.CategoryName</td>
+                        <td>@e.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

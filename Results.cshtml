@@ -1,0 +1,70 @@
+﻿@model ResultsEntryViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+<a asp-action="Events" class="rd-back">&larr; My events</a>
+<h1 class="rd-title mt-2">Results <small>@Model.Event.Name</small></h1>
+
+@if (!Model.EventHasEnded)
+{
+    <div class="alert alert-info">
+        This event is on @Model.Event.EventDate.ToString("dd MMM yyyy"). Results can be captured once it has taken place.
+    </div>
+}
+
+@if (!Model.Rows.Any())
+{
+    <div class="rd-empty"><p>There are no active enrolments to capture results for.</p></div>
+}
+else
+{
+    <form asp-action="Results" asp-route-eventId="@Model.Event.EventId" method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="rd-card p-3 mb-3">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label asp-for="TotalFinishers" class="form-label"></label>
+                    <input asp-for="TotalFinishers" type="number" min="1" class="form-control" disabled="@(!Model.EventHasEnded)" />
+                    <span asp-validation-for="TotalFinishers" class="text-danger"></span>
+                </div>
+                <div class="col-md-8 text-muted small mt-2 mt-md-0">
+                    Used for "47th out of 312 finishers". Leave a row blank if that participant has no result yet.
+                </div>
+            </div>
+        </div>
+
+        <div class="rd-card">
+            <div class="table-responsive">
+                <table class="table rd-table mb-0 align-middle">
+                    <thead><tr><th>Participant</th><th>Category</th><th>Finish time (hh:mm:ss)</th><th>Position</th></tr></thead>
+                    <tbody>
+                    @for (var i = 0; i < Model.Rows.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model.Rows[i].ParticipantName
+                                <input type="hidden" asp-for="Rows[i].EnrolmentId" />
+                            </td>
+                            <td>@Model.Rows[i].CategoryName</td>
+                            <td>
+                                <input asp-for="Rows[i].FinishTime" class="form-control rd-mono" placeholder="00:45:12" disabled="@(!Model.EventHasEnded)" />
+                                <span asp-validation-for="Rows[i].FinishTime" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="Rows[i].FinishPosition" type="number" min="1" class="form-control" disabled="@(!Model.EventHasEnded)" />
+                                <span asp-validation-for="Rows[i].FinishPosition" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if (Model.EventHasEnded)
+        {
+            <button type="submit" class="btn btn-primary mt-3">Save and publish results</button>
+        }
+    </form>
+}

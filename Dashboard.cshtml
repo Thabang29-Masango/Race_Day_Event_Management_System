@@ -1,0 +1,64 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="rd-title mb-0">Organiser Dashboard</h1>
+    <a asp-action="CreateEvent" class="btn btn-primary">New event</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="rd-card rd-kpi"><div class="rd-stat-label">Events created</div><div class="rd-kpi-value">@Model.Events.Count</div></div></div>
+    <div class="col-md-3"><div class="rd-card rd-kpi"><div class="rd-stat-label">Upcoming</div><div class="rd-kpi-value">@Model.UpcomingCount</div></div></div>
+    <div class="col-md-3"><div class="rd-card rd-kpi"><div class="rd-stat-label">Total enrolments</div><div class="rd-kpi-value">@Model.TotalEnrolments</div></div></div>
+    <div class="col-md-3">
+        <div class="rd-card rd-kpi">
+            <div class="rd-stat-label">Next event</div>
+            @if (Model.NextEvent != null)
+            {
+                <div class="rd-kpi-value rd-kpi-small">@Model.NextEvent.Event.EventDate.ToString("dd MMM yyyy")</div>
+                <div class="text-muted small">@Model.NextEvent.Event.Name</div>
+            }
+            else
+            {
+                <div class="rd-kpi-value rd-kpi-small">-</div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (!Model.Events.Any())
+{
+    <div class="rd-empty">
+        <p>You have not created any events yet.</p>
+        <a asp-action="CreateEvent" class="btn btn-primary">Create your first event</a>
+    </div>
+}
+else
+{
+    <div class="rd-card">
+        <div class="table-responsive">
+            <table class="table rd-table mb-0 align-middle">
+                <thead><tr><th>Event</th><th>Date</th><th>Location</th><th class="text-center">Enrolments</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var s in Model.Events.OrderBy(e => e.Event.EventDate))
+                {
+                    var past = s.Event.EventDate.Date < DateTime.Today;
+                    <tr>
+                        <td>
+                            @s.Event.Name
+                            @if (past) { <span class="status-badge status-other ms-1">Completed</span> }
+                        </td>
+                        <td>@s.Event.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@s.Event.Location</td>
+                        <td class="text-center"><strong>@s.Enrolments</strong></td>
+                        <td class="text-end">
+                            <a asp-action="Enrolments" asp-route-eventId="@s.Event.EventId" class="btn btn-sm btn-outline-primary">Enrolments</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
