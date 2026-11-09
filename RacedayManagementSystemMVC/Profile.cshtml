@@ -1,0 +1,56 @@
+﻿@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="rd-card p-4">
+            <h1 class="rd-title mb-3">My Profile</h1>
+
+            <form asp-action="Profile" method="post" enctype="multipart/form-data" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="ProfilePictureUrl" />
+
+                <div class="d-flex align-items-center mb-4">
+                    @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+                    {
+                        <img src="@Model.ProfilePictureUrl" alt="Profile picture" class="profile-pic" />
+                    }
+                    else
+                    {
+                        <div class="profile-pic profile-pic-placeholder" aria-hidden="true">
+                            @(Model.FirstName.Length > 0 ? Model.FirstName[0].ToString().ToUpper() : "?")
+                        </div>
+                    }
+                    <div class="ms-3 flex-grow-1">
+                        <label asp-for="Picture" class="form-label"></label>
+                        <input asp-for="Picture" type="file" class="form-control" accept="image/png,image/jpeg,image/webp,image/gif" />
+                        <div class="form-text">JPG, PNG, WEBP or GIF, up to 5 MB.</div>
+                        <span asp-validation-for="Picture" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FirstName" class="form-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LastName" class="form-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>

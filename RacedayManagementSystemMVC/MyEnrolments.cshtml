@@ -1,0 +1,48 @@
+﻿@model List<EnrolmentDetailDto>
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+<h1 class="rd-title mb-3">My Enrolments</h1>
+
+@if (!Model.Any())
+{
+    <div class="rd-empty">
+        <p>You have not enrolled for any events yet.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Find an event</a>
+    </div>
+}
+else
+{
+    <div class="rd-card">
+        <div class="table-responsive">
+            <table class="table rd-table mb-0 align-middle">
+                <thead>
+                    <tr><th>Event</th><th>Date</th><th>Location</th><th>Category</th><th>Status</th><th></th></tr>
+                </thead>
+                <tbody>
+                @foreach (var e in Model)
+                {
+                    var upcoming = e.EventDate.Date >= DateTime.Today;
+                    var cancelled = e.Status.Equals("Cancelled", StringComparison.OrdinalIgnoreCase);
+                    <tr>
+                        <td><a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId">@e.EventName</a></td>
+                        <td>@e.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@e.Location</td>
+                        <td>@e.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                        <td class="text-end">
+                            @if (upcoming && !cancelled)
+                            {
+                                <form asp-action="CancelEnrolment" asp-route-id="@e.EnrolmentId" method="post"
+                                      onsubmit="return confirm('Cancel this enrolment?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
