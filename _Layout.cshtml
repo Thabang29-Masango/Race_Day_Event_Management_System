@@ -1,0 +1,106 @@
+﻿@{
+    var session = Context.Session;
+    var loggedIn = session.IsLoggedIn();
+    var role = session.GetRole();
+    var roleClass = !loggedIn ? "role-guest" : role == "Organiser" ? "role-organiser" : "role-participant";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RaceDay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="@roleClass">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark rd-navbar">
+            <div class="container">
+                <a class="navbar-brand rd-brand" asp-controller="Home" asp-action="Index">
+                    <span class="rd-brand-mark">&#9654;</span> RACE<span>DAY</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+                        @if (!loggedIn)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Upcoming Events</a></li>
+                        }
+                        else if (role == "Organiser")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Events">My Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="CreateEvent">New Event</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Find Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyEnrolments">My Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyResults">My Results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile">Profile</a></li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-lg-center">
+                        @if (loggedIn)
+                        {
+                            <li class="nav-item me-lg-3">
+                                <span class="rd-role-pill">@role</span>
+                                <span class="rd-username">@session.GetFullName()</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-light">Log out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+                            <li class="nav-item ms-lg-2"><a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Register">Join RaceDay</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container rd-main">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (ViewBag.LoadError != null)
+        {
+            <div class="alert alert-warning" role="alert">@ViewBag.LoadError</div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <footer class="rd-footer">
+        <div class="container">&copy; @DateTime.Now.Year RaceDay &middot; Run. Ride. Rise.</div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

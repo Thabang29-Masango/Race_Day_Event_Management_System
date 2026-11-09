@@ -1,0 +1,14 @@
+﻿@model string
+@{
+    var status = (Model ?? string.Empty).Trim();
+    var key = status.ToLowerInvariant();
+    var css = key switch
+    {
+        "active" or "confirmed" => "status-confirmed",
+        "pending" => "status-pending",
+        "cancelled" => "status-cancelled",
+        _ => "status-other"
+    };
+    var label = key == "active" ? "Confirmed" : status;
+}
+<span class="status-badge @css">@label</span>

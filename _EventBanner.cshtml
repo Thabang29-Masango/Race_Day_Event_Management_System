@@ -1,0 +1,9 @@
+﻿@model EventDto
+@if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
+{
+    <img src="@Model.BannerImageUrl" alt="@Model.Name banner" class="event-banner" loading="lazy" />
+}
+else
+{
+    <div class="event-banner event-banner-placeholder" aria-hidden="true"><span>@Model.EventType</span></div>
+}
